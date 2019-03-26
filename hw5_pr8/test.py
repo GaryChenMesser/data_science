@@ -9,3 +9,6 @@ print(np.positive(a))
 
 b = [[1,2], [3,4]]
 print(np.mean(b, axis=0))
+
+d = [[0, 1, 2], [0, -1, -2]]
+print(np.maximum(np.zeros((2, 3)), d))
