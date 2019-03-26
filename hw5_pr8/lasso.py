@@ -1,6 +1,6 @@
 import numpy as np
 
-n = 500000
+n = 3000000
 beta_true = np.array([-2, -2, 2, 2, -2])
 X = np.zeros((n, 500), dtype=np.float16)
 X = np.random.normal(0, 1, (n, 500))
@@ -8,7 +8,7 @@ y = np.matmul(X[:, ::100], beta_true) + np.random.normal(0, 0.05, (n))
 
 Lambda = 0
 rho = 1
-m = 100
+m = 1000
 row = n // m
 
 theta = [np.zeros((m, 500)) for j in range(2)]
