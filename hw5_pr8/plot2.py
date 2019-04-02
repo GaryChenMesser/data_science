@@ -1,20 +1,19 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-with open("out2", 'r') as f:
-    data = f.read()
+data = np.load('out2.npz')
 
-lam = eval(data[0])
-beta_list = eval(data[1])
-covariate = [e for i, e in enumerate(beta_list) if (i+1)%100 == 0]
-redundant = [e for i, e in enumerate(beta_list) if (i+1)%100 != 0]
-print(len(covariate))
-print(len(redundant))
+lam = data['lam']
+beta_list = data['beta_list']
+covariate = beta_list[:, ::100]
+redundant = np.delete(beta_list, np.s_[::100], 1)
+print(covariate[0].shape)
+print(redundant[0].shape)
 
 
-plt.plot(range(len(t_list[i])), )
-plt.legend(['primal residual', 'dual residual'])
-plt.xlabel('iteration')
-plt.title('lambda = {}'.format(lam[i]))
+plt.plot(lam, redundant, '0.5')
+plt.plot(lam, covariate, '0.0')
+plt.legend(['redundant', 'covariate'])
+plt.xlabel('Lambda')
 
 plt.show()

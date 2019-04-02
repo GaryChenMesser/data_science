@@ -1,15 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-with open("out1", 'r') as f:
-    data = f.read().split('\n')
+data = np.load("out1.npz")
 
-lam = eval(data[0])
-print(len(lam))
-print(len(data))
-#print(data[1])
-t_list = eval(data[0])
-s_list = eval(data[2])
+lam = data['lam']
+t_list = data['t_list']
+s_list = data['s_list']
 
 plt.figure()
 
