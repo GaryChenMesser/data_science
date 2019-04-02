@@ -1,11 +1,14 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-with open("out", 'r') as f:
+with open("out1", 'r') as f:
     data = f.read().split('\n')
 
 lam = eval(data[0])
-t_list = eval(data[1])
+print(len(lam))
+print(len(data))
+#print(data[1])
+t_list = eval(data[0])
 s_list = eval(data[2])
 
 plt.figure()
