@@ -32,7 +32,7 @@ if args.mode == 1:
     t_list = [[] for i in lam]
     s_list = [[] for i in lam]
 else:
-    lam = np.linspace(0.001, 5, 20)
+    lam = np.linspace(0.001, 5, 5)
     beta_list = []
 
 for index, Lambda in enumerate(lam):
