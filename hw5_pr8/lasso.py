@@ -92,12 +92,7 @@ for index, Lambda in enumerate(lam):
 
 output = "out" + str(args.mode)
 
-with open(output, 'w') as f:
-    f.write(repr(lam))
-    f.write('\n')
-    if args.mode == 1:
-        f.write(repr(t_list))
-        f.write('\n')
-        f.write(repr(s_list))
-    else:
-        f.write(repr(beta_list))
+if args.mode == 1:
+    np.savez(output, lam = np.array(lam), t_list = np.array(t_list), s_list = np.array(s_list))
+else:
+    np.savez(output, lam = lam, beta_list = beta_list)
