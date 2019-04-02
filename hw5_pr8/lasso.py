@@ -5,7 +5,7 @@ parser = ArgumentParser()
 parser.add_argument("--mode", type=int)
 args = parser.parse_args()
 
-n = 10000
+n = 1000000
 beta_true = np.array([-2, -2, 2, 2, -2])
 X = np.zeros((n, 500), dtype=np.float32)
 X = np.random.normal(0, 1, (n, 500))
@@ -13,7 +13,7 @@ y = np.matmul(X[:, ::100], beta_true) + np.random.normal(0, 0.05, (n))
 
 Lambda = 0
 rho = 1
-m = 100
+m = 5000
 row = n // m
 
 inverse = []
@@ -32,7 +32,7 @@ if args.mode == 1:
     t_list = [[] for i in lam]
     s_list = [[] for i in lam]
 else:
-    lam = np.linspace(0.001, 5, 5)
+    lam = np.linspace(0.001, 5, 20)
     beta_list = []
 
 for index, Lambda in enumerate(lam):
