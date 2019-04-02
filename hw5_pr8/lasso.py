@@ -5,7 +5,7 @@ parser = ArgumentParser()
 parser.add_argument("--mode", type=int)
 args = parser.parse_args()
 
-n = 300
+n = 300000
 beta_true = np.array([-2, -2, 2, 2, -2])
 X = np.zeros((n, 500), dtype=np.float32)
 X = np.random.normal(0, 1, (n, 500))
@@ -13,13 +13,8 @@ y = np.matmul(X[:, ::100], beta_true) + np.random.normal(0, 0.05, (n))
 
 Lambda = 0
 rho = 1
-m = 100
+m = 3000
 row = n // m
-
-theta = [np.zeros((m, 500)) for j in range(2)]
-beta = [np.zeros((500,)) for i in range(2)]
-alpha = [np.zeros((m, 500)) for j in range(2)]
-
 
 inverse = []
 XTy = []
@@ -42,6 +37,9 @@ else:
 
 for index, Lambda in enumerate(lam):
     print("lambda = ", Lambda)
+    theta = [np.zeros((m, 500)) for j in range(2)]
+    beta = [np.zeros((500,)) for i in range(2)]
+    alpha = [np.zeros((m, 500)) for j in range(2)]
     t = 1
     s = 1
     t_stop = 0
@@ -51,6 +49,8 @@ for index, Lambda in enumerate(lam):
     while ite < 500:
     #while t > t_stop or s > s_stop:
         ite += 1
+        if ite % 100 == 0:
+            print(ite)
         theta[0] = theta[1]
         beta[0] = beta[1]
         alpha[0] = alpha[1]
@@ -71,6 +71,9 @@ for index, Lambda in enumerate(lam):
         t = np.linalg.norm(np.mean([theta[1][i] - beta[1] for i in range(m)], axis=0))
         s = np.linalg.norm(beta[0] - beta[1]) * rho
         
+        #print(t)
+        #print(s)        
+
         if args.mode == 1:
             t_list[index].append(t)
             s_list[index].append(s)
@@ -89,6 +92,7 @@ for index, Lambda in enumerate(lam):
     
     if args.mode == 2:
         beta_list.append(beta[1])
+    print(beta[0][::100])
 
 output = "out" + str(args.mode)
 
