@@ -1,4 +1,9 @@
 import numpy as np
+from argparse import ArgumentParser
+
+parser = ArgumentParser()
+parser.add_argument("--mode", type=int)
+args = parser.parse_args()
 
 n = 300
 beta_true = np.array([-2, -2, 2, 2, -2])
@@ -27,11 +32,14 @@ for i in range(m):
 
 print("ADMM start!")
 
-lam = np.linspace(0.001, 5, 20)
-beta_list = []
-#lam = [0.5, 1, 2, 4]
-#t_list = [[] for i in lam]
-#s_list = [[] for i in lam]
+if args.mode == 1:
+    lam = [0.5, 1, 2, 4]
+    t_list = [[] for i in lam]
+    s_list = [[] for i in lam]
+else:
+    lam = np.linspace(0.001, 5, 20)
+    beta_list = []
+
 for index, Lambda in enumerate(lam):
     print("lambda = ", Lambda)
     t = 1
@@ -61,9 +69,12 @@ for index, Lambda in enumerate(lam):
             alpha[1][i] = alpha[0][i] + theta[1][i] - beta[1]
             
         t = np.linalg.norm(np.mean([theta[1][i] - beta[1] for i in range(m)], axis=0))
-        s = np.linalg.norm(beta[0] - beta[1])
-        #t_list[index].append(t)
-        #s_list[index].append(s)
+        s = np.linalg.norm(beta[0] - beta[1]) * rho
+        
+        if args.mode == 1:
+            t_list[index].append(t)
+            s_list[index].append(s)
+        
         t_stop = 0.0001 * np.linalg.norm(beta[1])
         s_stop = 0.0001 * np.linalg.norm(np.mean(alpha[1], axis=0))
         
@@ -76,10 +87,17 @@ for index, Lambda in enumerate(lam):
             for i in range(m):
                 alpha[1][i] *= 2
     
-    beta_list.append(beta[1])
+    if args.mode == 2:
+        beta_list.append(beta[1])
 
-with open("out2", 'w') as f:
+output = "out" + str(args.mode)
+
+with open(output, 'w') as f:
     f.write(repr(lam))
     f.write('\n')
-    f.write(repr(beta_list))
+    if args.mode == 1:
+        f.write(repr(t_list))
+        f.write(repr(s_list))
+    else:
+        f.write(repr(beta_list))
     f.write('\n')
