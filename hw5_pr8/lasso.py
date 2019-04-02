@@ -13,7 +13,7 @@ y = np.matmul(X[:, ::100], beta_true) + np.random.normal(0, 0.05, (n))
 
 Lambda = 0
 rho = 1
-m = 100
+m = 200
 row = n // m
 
 inverse = []
@@ -32,7 +32,7 @@ if args.mode == 1:
     t_list = [[] for i in lam]
     s_list = [[] for i in lam]
 else:
-    lam = np.linspace(0.001, 5, 5)
+    lam = np.linspace(1, 500, 10)
     beta_list = []
 
 for index, Lambda in enumerate(lam):
@@ -55,8 +55,8 @@ for index, Lambda in enumerate(lam):
         beta[0] = beta[1]
         alpha[0] = alpha[1]
         
-        #print(beta[0][::100])
-        #print(np.mean(theta[0][:, ::100], axis=0))
+        print(beta[0][::100])
+        print(np.mean(theta[0][:, ::100], axis=0))
         
         for i in range(m):
             theta[1][i] = np.matmul(inverse[i], (XTy[i] + rho * (beta[0] - alpha[0][i])))
@@ -68,10 +68,10 @@ for index, Lambda in enumerate(lam):
         for i in range(m):
             alpha[1][i] = alpha[0][i] + theta[1][i] - beta[1]
             
-        t = np.linalg.norm(np.mean([theta[1][i] - beta[1] for i in range(m)], axis=0))
+        t = np.mean([np.linalg.norm(theta[1][i] - beta[1]) for i in range(m)])
         s = np.linalg.norm(beta[0] - beta[1]) * rho
-        #print(t)
-        #print(s)
+        print(t)
+        print(s)
         
         if args.mode == 1:
             t_list[index].append(t)
