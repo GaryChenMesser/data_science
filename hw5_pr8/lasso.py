@@ -1,6 +1,6 @@
 import numpy as np
 
-n = 3000000
+n = 2000000
 beta_true = np.array([-2, -2, 2, 2, -2])
 X = np.zeros((n, 500), dtype=np.float32)
 X = np.random.normal(0, 1, (n, 500))
@@ -19,21 +19,24 @@ alpha = [np.zeros((m, 500)) for j in range(2)]
 inverse = []
 XTy = []
 
-print("test")
+print("Compute and store invariant part.")
 
 for i in range(m):
     inverse.append(np.linalg.inv(np.matmul(X[i * row:(i + 1) * row, :].T, X[i * row:(i + 1) * row, :]) + rho * np.identity(500)))
     XTy.append(np.matmul(X[i * row:(i + 1) * row, :].T, y[i * row:(i + 1) * row]))
 
-print("test2")
+print("ADMM start!")
 
-for Lambda in [1]:
+for Lambda in [0.5, 1, 2, 4]:
     t = 1
     s = 1
     t_stop = 0
     s_stop = 0
     
-    while(t > t_stop or s > s_stop):
+    ite = 0
+    while ite < 500:
+    #while t > t_stop or s > s_stop:
+        ite += 1
         theta[0] = theta[1]
         beta[0] = beta[1]
         alpha[0] = alpha[1]
@@ -55,8 +58,8 @@ for Lambda in [1]:
         s = np.linalg.norm(beta[0] - beta[1])
         print(t)
         print(s)
-        t_stop = 0.001 * np.linalg.norm(beta[1])
-        s_stop = 0.001 * np.linalg.norm(np.mean(alpha[1], axis=0))
+        t_stop = 0.0001 * np.linalg.norm(beta[1])
+        s_stop = 0.0001 * np.linalg.norm(np.mean(alpha[1], axis=0))
         
         if t > 10 * s:
             rho *= 2
