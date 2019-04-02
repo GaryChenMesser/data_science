@@ -97,7 +97,7 @@ with open(output, 'w') as f:
     f.write('\n')
     if args.mode == 1:
         f.write(repr(t_list))
+        f.write('\n')
         f.write(repr(s_list))
     else:
         f.write(repr(beta_list))
-    f.write('\n')
