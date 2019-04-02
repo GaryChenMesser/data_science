@@ -1,6 +1,6 @@
 import numpy as np
 
-n = 2000000
+n = 3000
 beta_true = np.array([-2, -2, 2, 2, -2])
 X = np.zeros((n, 500), dtype=np.float32)
 X = np.random.normal(0, 1, (n, 500))
@@ -27,7 +27,10 @@ for i in range(m):
 
 print("ADMM start!")
 
-for Lambda in [0.5, 1, 2, 4]:
+lam = [0.5, 1, 2, 4]
+t_list = [[] for i in lam]
+s_list = [[] for i in lam]
+for index, Lambda in enumerate(lam):
     t = 1
     s = 1
     t_stop = 0
@@ -41,8 +44,8 @@ for Lambda in [0.5, 1, 2, 4]:
         beta[0] = beta[1]
         alpha[0] = alpha[1]
         
-        print(beta[0][::100])
-        print(np.mean(theta[0][:, ::100], axis=0))
+        #print(beta[0][::100])
+        #print(np.mean(theta[0][:, ::100], axis=0))
         
         for i in range(m):
             theta[1][i] = np.matmul(inverse[i], (XTy[i] + rho * (beta[0] - alpha[0][i])))
@@ -56,8 +59,8 @@ for Lambda in [0.5, 1, 2, 4]:
             
         t = np.linalg.norm(np.mean([theta[1][i] - beta[1] for i in range(m)], axis=0))
         s = np.linalg.norm(beta[0] - beta[1])
-        print(t)
-        print(s)
+        t_list[index].append(t)
+        s_list[index].append(s)
         t_stop = 0.0001 * np.linalg.norm(beta[1])
         s_stop = 0.0001 * np.linalg.norm(np.mean(alpha[1], axis=0))
         
@@ -70,5 +73,10 @@ for Lambda in [0.5, 1, 2, 4]:
             for i in range(m):
                 alpha[1][i] *= 2
 
-
+with open("out", 'w') as f:
+    f.write(repr(lam))
+    f.write('\n')
+    f.write(repr(t_list))
+    f.write('\n')
+    f.write(repr(s_list))
 
